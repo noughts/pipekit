@@ -31,6 +31,13 @@ export const find = <T>(predicate: (element: T) => boolean) => (array: T[]) => {
     return array.find(predicate);
 }
 
+export const first = <T>(array: T[]): T | undefined => {
+    return array[0];
+};
+export const last = <T>(array: T[]): T | undefined => {
+    return array.length > 0 ? array[array.length - 1] : undefined;
+};
+
 export const shuffle = <T>(originalArray: T[]): T[] => {
     const array = [...originalArray];
     for (let i = array.length - 1; i > 0; i--) {
