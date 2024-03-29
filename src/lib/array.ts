@@ -7,7 +7,7 @@ export const take = <T>(n: number): (array: T[]) =>
 export const compact = <T>(array: Array<T | null>): Array<T> =>
     array.filter((item): item is T => item !== null);
 
-export const filter = <T>(predicate: (element: T) => boolean): ((array: T[]) =>
+export const filter = <T>(predicate: (value: T, index: number, array: T[]) => unknown): ((array: T[]) =>
     T[]) => (array: T[]): T[] => array.filter(predicate);
 
 export const map = <T, U>(transform: (element: T) => U): ((array: T[]) =>
