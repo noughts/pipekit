@@ -1,4 +1,5 @@
 import { shuffle, sort, take, uniq } from '$lib/array.js';
+import { toDate, toUnixTime } from '$lib/date.js';
 import { pipe } from '$lib/pipe.js';
 import { describe, it, expect } from 'vitest';
 
@@ -37,3 +38,11 @@ describe('array', () => {
 		expect(result).toStrictEqual([{ id: 1, name: "hoge" }, { id: 2, name: "piyo" }]);
 	})
 });
+
+describe("date", () => {
+	it('toDate', () => {
+		const result = pipe(1711688078 * 1000, toDate)
+		expect(result).toStrictEqual(new Date(1711688078 * 1000))
+		expect(pipe(result, toUnixTime)).toBe(1711688078 * 1000);
+	});
+}) 

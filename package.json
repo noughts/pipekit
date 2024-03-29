@@ -1,6 +1,6 @@
 {
 	"name": "pipekit",
-	"version": "0.1.5",
+	"version": "0.2.0",
 	"license": "MIT",
 	"scripts": {
 		"dev": "vite dev",
@@ -22,6 +22,10 @@
 		"./dist/array": {
 			"types": "./dist/array.d.ts",
 			"default": "./dist/array.js"
+		},
+		"./dist/date": {
+			"types": "./dist/date.d.ts",
+			"default": "./dist/date.js"
 		}
 	},
 	"files": [
