@@ -4,12 +4,32 @@ Poor man's yet another Functional Programming utils for TypeScript.
 
 # Example
 
-```
+```typescript
 import { pipe } from "pipekit";
 import { map } from "pipekit/dist/array";
 
 pipe([1, 2, 3], map(x => x + 1), console.log)
 // [2, 3, 4]
+```
+
+# Why pipe is good?
+
+```typescript
+
+const slackMessageString = ...
+
+// without pipe 🤯
+const result1 = stripHtmlTag(convertLinks(removeMentions(trimEmojis(slackMessageString))))
+
+// with pipe 😇
+const result2 = pipe(
+    slackMessageString,
+    trimEmojis,
+    removeMentions,
+    convertLinks,
+    stripHtmlTags,
+)
+
 ```
 
 # Motivation
