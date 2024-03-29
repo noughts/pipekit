@@ -1,4 +1,4 @@
-import { shuffle, sort, take, uniq } from '$lib/array.js';
+import { find, shuffle, sort, take, uniq } from '$lib/array.js';
 import { toDate, toUnixTime } from '$lib/date.js';
 import { pipe } from '$lib/pipe.js';
 import { describe, it, expect } from 'vitest';
@@ -46,6 +46,20 @@ describe('array', () => {
         const result = pipe(orig, uniq(x => x.id));
         expect(orig).toStrictEqual([{ id: 1, name: "hoge" }, { id: 1, name: "fuga" }, { id: 2, name: "piyo" }])// orig not changed
         expect(result).toStrictEqual([{ id: 1, name: "hoge" }, { id: 2, name: "piyo" }]);
+    })
+
+    it("find", () => {
+        const numbers = [1, 2, 3, 4, 5];
+        const found = find(numbers, x => x > 3);
+        expect(found).toBe(4);
+
+        const people = [
+            { name: 'Alice', age: 30 },
+            { name: 'Bob', age: 25 },
+            { name: 'Charlie', age: 35 }
+        ];
+        const person = find(people, p => p.name === 'Bob');
+        expect(person).toStrictEqual({ name: 'Bob', age: 25 })
     })
 });
 

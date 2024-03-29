@@ -27,6 +27,10 @@ export const uniq = <T, K>(keyFn: (item: T) => K) => (array: T[]): T[] => {
     return Array.from(uniqueItems.values());
 };
 
+export const find = <T>(array: T[], predicate: (element: T) => boolean) => {
+    return array.find(predicate);
+}
+
 export const shuffle = <T>(originalArray: T[]): T[] => {
     const array = [...originalArray];
     for (let i = array.length - 1; i > 0; i--) {
