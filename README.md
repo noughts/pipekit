@@ -1,6 +1,6 @@
 # What is this?
 
-Poor man's yet another Functional Programming utils for TypeScript.
+Poor man's yet another minimal Functional Programming utils for TypeScript.
 
 # Example
 
@@ -29,6 +29,14 @@ const result2 = pipe(
     convertLinks,
     stripHtmlTags,
 )
+
+// One-off anonymous functions are also supported.
+pipe(" Hoge ",
+    x => x.trim(),
+    x => x.length,
+    console.log
+)
+// 4
 
 ```
 
