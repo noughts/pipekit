@@ -27,7 +27,7 @@ export const uniq = <T, K>(keyFn: (item: T) => K) => (array: T[]): T[] => {
     return Array.from(uniqueItems.values());
 };
 
-export const find = <T>(array: T[], predicate: (element: T) => boolean) => {
+export const find = <T>(predicate: (element: T) => boolean) => (array: T[]) => {
     return array.find(predicate);
 }
 

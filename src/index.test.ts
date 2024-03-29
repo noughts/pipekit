@@ -49,8 +49,8 @@ describe('array', () => {
     })
 
     it("find", () => {
-        const numbers = [1, 2, 3, 4, 5];
-        const found = find(numbers, x => x > 3);
+
+        const found = pipe([1, 2, 3, 4, 5], find(x => x > 3))
         expect(found).toBe(4);
 
         const people = [
@@ -58,7 +58,7 @@ describe('array', () => {
             { name: 'Bob', age: 25 },
             { name: 'Charlie', age: 35 }
         ];
-        const person = find(people, p => p.name === 'Bob');
+        const person = pipe(people, find(x => x.name === 'Bob'))
         expect(person).toStrictEqual({ name: 'Bob', age: 25 })
     })
 });
