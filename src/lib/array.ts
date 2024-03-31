@@ -1,22 +1,34 @@
-export const sort = <T>(compareFn?: (a: T, b: T) => number): (array: T[]) =>
-    T[] => (array: T[]) => [...array].sort(compareFn);
+import { clone } from "./object.js";
+import { pipe } from "./pipe.js";
 
-export const take = <T>(n: number): (array: T[]) =>
-    T[] => (array: T[]): T[] => array.slice(0, n);
+export const sort = <T>(compareFn?: (a: T, b: T) => number) => {
+    return function (array: T[]) {
+        return [...array].sort(compareFn).map(clone);
+    }
+}
 
-export const compact = <T>(array: Array<T | null>): Array<T> =>
-    array.filter((item): item is T => item !== null);
+export const take = <T>(n: number) => {
+    return function (array: T[]) {
+        return array.slice(0, n).map(clone);
+    }
+}
 
-export const filter = <T>(predicate: (value: T, index: number, array: T[]) => unknown): ((array: T[]) =>
-    T[]) => (array: T[]): T[] => array.filter(predicate);
+export const compact = <T>(array: Array<T | null>) =>
+    array.filter((item): item is T => item !== null).map(clone);
 
-export const map = <T, U>(transform: (element: T) => U): ((array: T[]) =>
-    U[]) => (array: T[]): U[] => array.map(transform);
+export const filter = <T>(predicate: (value: T, index: number, array: T[]) => unknown) => {
+    return function (array: T[]) {
+        return array.filter(predicate).map(clone);
+    }
+}
+
+export const map = <T, U>(transform: (element: T) => U): ((array: T[]) => U[]) =>
+    (array: T[]): U[] => array.map(transform).map(clone);
 
 export const forEach = <T>(callback: (element: T, index: number, array: T[]) => void): ((array: T[]) => void) =>
     (array: T[]): void => array.forEach(callback);
 
-export const uniq = <T, K>(keyFn: (item: T) => K) => (array: T[]): T[] => {
+export const uniq = <T, K>(keyFn: (item: T) => K) => (array: T[]) => {
     const uniqueItems = new Map<K, T>();
     for (const item of array) {
         const key = keyFn(item);
@@ -24,25 +36,25 @@ export const uniq = <T, K>(keyFn: (item: T) => K) => (array: T[]): T[] => {
             uniqueItems.set(key, item);
         }
     }
-    return Array.from(uniqueItems.values());
+    return Array.from(uniqueItems.values()).map(clone);
 };
 
 export const find = <T>(predicate: (element: T) => boolean) => (array: T[]) => {
-    return array.find(predicate);
+    return pipe(array.find(predicate), clone);
 }
 
 export const first = <T>(array: T[]): T | undefined => {
-    return array[0];
+    return clone(array[0]);
 };
 export const last = <T>(array: T[]): T | undefined => {
-    return array.length > 0 ? array[array.length - 1] : undefined;
+    return array.length > 0 ? clone(array[array.length - 1]) : undefined;
 };
 
-export const shuffle = <T>(originalArray: T[]): T[] => {
+export const shuffle = <T>(originalArray: T[]) => {
     const array = [...originalArray];
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
-    return array;
+    return clone(array);
 }

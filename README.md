@@ -1,6 +1,6 @@
 # What is this?
 
-Poor man's yet another minimal Functional Programming utils for TypeScript.
+Poor man's yet another minimal Functional Programming toolkit for TypeScript.
 
 # Example
 
