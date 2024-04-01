@@ -1,20 +1,27 @@
-import { clone } from "./object.js";
+import { clone, type DeepReadonly } from "./object.js";
 import { pipe } from "./pipe.js";
 
 export const sort = <T>(compareFn?: (a: T, b: T) => number) => {
     return function (array: T[]) {
-        return [...array].sort(compareFn).map(clone);
+        return structuredClone(array)
+            .sort(compareFn)
+            .map(clone);
     }
 }
 
 export const take = <T>(n: number) => {
     return function (array: T[]) {
-        return array.slice(0, n).map(clone);
+        return array
+            .slice(0, n)
+            .map(clone);
     }
 }
 
-export const compact = <T>(array: Array<T | null>) =>
-    array.filter((item): item is T => item !== null).map(clone);
+export const compact = <T>(array: Array<T | null>) => {
+    return array
+        .filter((item): item is T => item !== null)
+        .map(clone);
+}
 
 export const filter = <T>(predicate: (value: T, index: number, array: T[]) => unknown) => {
     return function (array: T[]) {
@@ -22,31 +29,36 @@ export const filter = <T>(predicate: (value: T, index: number, array: T[]) => un
     }
 }
 
-export const map = <T, U>(transform: (element: T) => U): ((array: T[]) => U[]) =>
-    (array: T[]): U[] => array.map(transform).map(clone);
+export const map = <T, U>(transform: (element: T) => U): ((array: T[]) => DeepReadonly<U>[]) => {
+    return function (array: T[]) {
+        return array.map(transform).map(clone);
+    }
+}
 
 export const forEach = <T>(callback: (element: T, index: number, array: T[]) => void): ((array: T[]) => void) =>
     (array: T[]): void => array.forEach(callback);
 
-export const uniq = <T, K>(keyFn: (item: T) => K) => (array: T[]) => {
-    const uniqueItems = new Map<K, T>();
-    for (const item of array) {
-        const key = keyFn(item);
-        if (!uniqueItems.has(key)) {
-            uniqueItems.set(key, item);
+export const uniq = <T, K>(keyFn: (item: T) => K) => {
+    return function(array:T[]){
+        const uniqueItems = new Map<K, T>();
+        for (const item of array) {
+            const key = keyFn(item);
+            if (!uniqueItems.has(key)) {
+                uniqueItems.set(key, item);
+            }
         }
+        return Array.from(uniqueItems.values()).map(clone);
     }
-    return Array.from(uniqueItems.values()).map(clone);
-};
+}
 
 export const find = <T>(predicate: (element: T) => boolean) => (array: T[]) => {
     return pipe(array.find(predicate), clone);
 }
 
-export const first = <T>(array: T[]): T | undefined => {
+export const first = <T>(array: T[]): DeepReadonly<T> | undefined => {
     return clone(array[0]);
 };
-export const last = <T>(array: T[]): T | undefined => {
+export const last = <T>(array: T[]): DeepReadonly<T> | undefined => {
     return array.length > 0 ? clone(array[array.length - 1]) : undefined;
 };
 

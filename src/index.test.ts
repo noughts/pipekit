@@ -1,22 +1,110 @@
 import { compact, filter, find, map, shuffle, sort, take, uniq } from '$lib/array.js';
 import { toDate, toUnixTime } from '$lib/date.js';
-import { clone, freeze, update } from '$lib/object.js';
+import { clone, update, type DeepReadonly } from '$lib/object.js';
 import { pipe } from '$lib/pipe.js';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-it("hoge", ()=>{
-    const orig = {
-        name: "John",
-        phone: {
-            brand: "Apple",
-            storage: 512,
-        }
+type User = {
+    id: number;
+    name: string;
+    phone: {
+        brand: string;
+        storage: number;
     }
-    const res = pipe(orig, update(x=>{
-        x.name = "a"
-        return x;
-    }))
+}
+type ReadonlyUser = DeepReadonly<User>
+
+const readonlyUser: ReadonlyUser = {
+    id: 1,
+    name: "aa",
+    phone: {
+        brand: "apple",
+        storage: 123,
+    }
+}
+
+describe("TypeScript Basics", () => {
+    it("readonly", () => {
+        const user: User = {
+            id: 1,
+            name: "hoge",
+            phone: {
+                brand: "apple",
+                storage: 128
+            }
+        }
+        const userAsConst: User = {
+            id: 1,
+            name: "hoge",
+            phone: {
+                brand: "apple",
+                storage: 128
+            }
+        } as const
+        const objAsConst = {
+            id: 1,
+            name: "hoge",
+            phone: {
+                brand: "apple",
+                storage: 128
+            }
+        } as const
+        userAsConst.name = "fuga";// User type のオブジェクトを as const で定義しても変更できてしまうので意味ない
+        // objAsConst.name = "aaa"// as const で　type を指定しなければ変更できない
+        // objAsConst.phone.brand = "sum"// as const で　type を指定なしだとネストオブジェクトも変更できない
+
+        const shallowReadonlyUser: Readonly<User> = {
+            id: 1,
+            name: "hoge",
+            phone: {
+                brand: "apple",
+                storage: 128
+            }
+        }
+        // readonlyUser.name = "aaa"// Readonly にすれば変更できない
+        shallowReadonlyUser.phone.brand = "aaa"// Readonly でもネストされたオブジェクトは変更できる
+    })
+
+    it("Full Readonly", () => {
+        type FullReadonlyUser = {
+            readonly id: number;
+            readonly name: string;
+            readonly phone: {
+                readonly brand: string;
+                readonly storage: number;
+            }
+        }
+        const user: FullReadonlyUser = {
+            id: 1,
+            name: "hoge",
+            phone: {
+                brand: "apple",
+                storage: 128
+            }
+        }
+        // user.phone.brand = "aaa";// 全てのキーに明示的に readonly をつければ変更不可
+
+        type FullReadonlyUser2 = Readonly<{
+            id: number;
+            name: string;
+            phone: Readonly<{
+                brand: string;
+                storage: number;
+            }>
+        }>
+        const user2: FullReadonlyUser2 = {
+            id: 1,
+            name: "hoge",
+            phone: {
+                brand: "apple",
+                storage: 128
+            }
+        }
+        // user2.phone.brand = "aaa";// FullReadonlyUser2 のように定義してもよい。        
+    })
 })
+
+
 
 describe("pipe()", () => {
     it("anonymous functions", () => {
@@ -29,6 +117,9 @@ describe("pipe()", () => {
 })
 
 describe("object", () => {
+    it("DeepReadonly", () => {
+        // readonlyUser.phone.brand = "aa";// コンパイルエラー出ます
+    })
     it("ref: shallow copy", () => {
         const orig = {
             name: "John",
@@ -42,20 +133,27 @@ describe("object", () => {
         expect(orig.phone.storage).toBe(1024);
     })
     it("clone()", () => {
-        const orig = {
+        const orig: User = {
+            id: 123,
             name: "John",
             phone: {
                 brand: "Apple",
                 storage: 512,
             }
         }
-        const cloned = pipe(orig, clone);
-        cloned.phone.storage = 1024;
+        const cloned = clone(orig);
+        expect(cloned.phone.storage).toBe(512);
+        const modifiedCloned = pipe(cloned, update(x => {
+            x.phone.storage = 1024
+            return x;
+        }))
         expect(orig.phone.storage).toBe(512);
-        expect(cloned.phone.storage).toBe(1024);
+        expect(cloned.phone.storage).toBe(512);
+        expect(modifiedCloned.phone.storage).toBe(1024);
     })
     it("update()", () => {
-        const orig = {
+        const orig: ReadonlyUser = {
+            id: 123,
             name: "John",
             phone: {
                 brand: "Apple",
@@ -99,8 +197,8 @@ describe('Array Module', () => {
         expect(result).not.toStrictEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     })
 
-    it("compact()", ()=>{
-        const orig = ["hoge",null,"fuga"];
+    it("compact()", () => {
+        const orig = ["hoge", null, "fuga"];
         const result = pipe(orig, compact);
         expect(result.length).toBe(2);
     })
@@ -166,7 +264,7 @@ describe('Array Module', () => {
             people[1].age = 100;
             expect(person).toStrictEqual({ name: 'Bob', age: 25 })
         })
-        it("not found", ()=>{
+        it("not found", () => {
             const people = [
                 { name: 'Alice', age: 30 },
                 { name: 'Bob', age: 25 },
