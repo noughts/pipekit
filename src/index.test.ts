@@ -1,6 +1,6 @@
 import { compact, filter, find, map, shuffle, sort, take, uniq } from '$lib/array.js';
 import { toDate, toUnixTime } from '$lib/date.js';
-import { clone, update, type DeepReadonly } from '$lib/object.js';
+import { clone, update, type DeepReadonly, defrost } from '$lib/object.js';
 import { pipe } from '$lib/pipe.js';
 import { describe, expect, it } from 'vitest';
 
@@ -23,7 +23,42 @@ const readonlyUser: ReadonlyUser = {
     }
 }
 
+
+
+
 describe("TypeScript Basics", () => {
+    it("Composite Type", () => {
+        type CouponBase = {
+            name: string;
+            brand: string;
+        }
+        type CodeCoupon = {
+            conversionType: "コード"
+            code: string;
+        }
+        type WebsiteCoupon = {
+            conversionType: "Webサイトを開く"
+            url: string;
+        }
+        type PriceChangeCoupon = {
+            displayStyle: "価格変更"
+            originalPrice: number;
+            discountedPrice: number;
+        }
+        type DiscountCoupon = {
+            displayStyle: "割引";
+            discountedPrice: number;
+        }
+        type Coupon = CouponBase & (CodeCoupon | WebsiteCoupon) & (PriceChangeCoupon | DiscountCoupon);
+
+        function changeBrand(c: Coupon) {
+            return pipe(c, update(x => {
+                x.brand = "coca cola"
+                return x;
+            }))
+        }
+    })
+
     it("readonly", () => {
         const user: User = {
             id: 1,
@@ -160,7 +195,7 @@ describe("object", () => {
                 storage: 512,
             }
         }
-        const updated = pipe(orig, update(x => {
+        const updated = pipe(orig, defrost, update(x => {
             x.phone.storage = 1024;
             return x;
         }))

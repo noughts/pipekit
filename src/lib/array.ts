@@ -29,7 +29,7 @@ export const filter = <T>(predicate: (value: T, index: number, array: T[]) => un
     }
 }
 
-export const map = <T, U>(transform: (element: T) => U): ((array: T[]) => DeepReadonly<U>[]) => {
+export const map = <T, U>(transform: (element: T) => U): ((array: T[]) => U[]) => {
     return function (array: T[]) {
         return array.map(transform).map(clone);
     }
@@ -55,10 +55,10 @@ export const find = <T>(predicate: (element: T) => boolean) => (array: T[]) => {
     return pipe(array.find(predicate), clone);
 }
 
-export const first = <T>(array: T[]): DeepReadonly<T> | undefined => {
+export const first = <T>(array: T[]): T | undefined => {
     return clone(array[0]);
 };
-export const last = <T>(array: T[]): DeepReadonly<T> | undefined => {
+export const last = <T>(array: T[]): T | undefined => {
     return array.length > 0 ? clone(array[array.length - 1]) : undefined;
 };
 
