@@ -14,7 +14,7 @@ export const clone = <T>(obj: T) => {
 
 export const update = <T>(updater: (input: T) => T) => {
     return function (original: T) {
-        return pipe(original, structuredClone, updater, freeze)
+        return pipe(original, structuredClone, updater)
     }
 }
 
