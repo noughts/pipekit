@@ -1,9 +1,15 @@
-import { compact, filter, find, join, map, shuffle, sort, take, uniq } from '$lib/array.js';
+import { compact, filter, find, flatten, join, map, shuffle, sort, take, uniq } from '$lib/array.js';
 import { pipe } from '$lib/pipe.js';
 import { describe, expect, it } from 'vitest';
 
 
 describe('Array Module', () => {
+    it("flatten", () => {
+        const orig = [[1, 2], [3, 4]];
+        const res = pipe(orig, flatten());
+        expect(res).toStrictEqual([1, 2, 3, 4]);
+    })
+
     it('sort() asc', () => {
         const orig = [1, 5, 2, 4, 3]
         const result = pipe(orig, sort((a, b) => a - b))

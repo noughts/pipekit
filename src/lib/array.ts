@@ -1,11 +1,16 @@
 import { pipe } from "./pipe.js";
 
+export function flatten<T>() {
+    return function (nestedArray: T[][]) {
+        return nestedArray.flat(2) as T[];
+    }
+}
+
 export function join<T>(separator?: string | undefined) {
     return function (array: T[]) {
         return array.join(separator)
     }
 }
-
 
 export const sort = <T>(compareFn?: (a: T, b: T) => number) => {
     return function (array: T[]) {
