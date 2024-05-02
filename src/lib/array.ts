@@ -1,9 +1,7 @@
 import { pipe } from "./pipe.js";
 
-export function flatten<T>() {
-    return function (nestedArray: T[][]) {
-        return nestedArray.flat(2) as T[];
-    }
+export function flatten<T>(nestedArray: T[][]) {
+    return nestedArray.flat(2) as T[];
 }
 
 export function join<T>(separator?: string | undefined) {

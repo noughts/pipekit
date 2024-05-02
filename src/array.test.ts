@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 describe('Array Module', () => {
     it("flatten", () => {
         const orig = [[1, 2], [3, 4]];
-        const res = pipe(orig, flatten());
+        const res = pipe(orig, flatten);
         expect(res).toStrictEqual([1, 2, 3, 4]);
     })
 
