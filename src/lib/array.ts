@@ -24,9 +24,15 @@ export const take = <T>(n: number) => {
     }
 }
 
-export const compact = <T>(array: Array<T | null>) => {
+export const compact = <T>(array: Array<T | null | undefined>) => {
     return array
-        .filter((item): item is T => item !== null)
+        .filter((item): item is T => {
+            if (item) {
+                return true;
+            } else {
+                return false;
+            }
+        })
 }
 
 export const filter = <T>(predicate: (value: T, index: number, array: T[]) => unknown) => {

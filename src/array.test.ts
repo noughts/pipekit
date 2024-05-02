@@ -37,8 +37,14 @@ describe('Array Module', () => {
         expect(result).not.toStrictEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     })
 
-    it("compact()", () => {
+    it("compact() null", () => {
         const orig = ["hoge", null, "fuga"];
+        const result = pipe(orig, compact);
+        expect(result.length).toBe(2);
+    })
+
+    it("compact() undefined", () => {
+        const orig = ["hoge", undefined, "fuga"];
         const result = pipe(orig, compact);
         expect(result.length).toBe(2);
     })
