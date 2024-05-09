@@ -19,6 +19,10 @@
             "types": "./dist/index.d.ts",
             "default": "./dist/index.js"
         },
+        "./dist/string": {
+            "types": "./dist/string.d.ts",
+            "default": "./dist/string.js"
+        },
         "./dist/array": {
             "types": "./dist/array.d.ts",
             "default": "./dist/array.js"
