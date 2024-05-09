@@ -5,34 +5,32 @@ export function flatten<T>(nestedArray: T[][]) {
 }
 
 export function join<T>(separator?: string | undefined) {
-    return function (array: T[]) {
-        return array.join(separator)
+    return function (self: T[]) {
+        return self.join(separator)
     }
 }
 
 export const sort = <T>(compareFn?: (a: T, b: T) => number) => {
-    return function (array: T[]) {
-        return [...array]
+    return function (self: T[]) {
+        return [...self]
             .sort(compareFn)
     }
 }
 
 export const take = <T>(n: number) => {
-    return function (array: T[]) {
-        return array
-            .slice(0, n)
+    return function (self: T[]) {
+        return self.slice(0, n)
     }
 }
 
 export const compact = <T>(array: Array<T | null | undefined>) => {
-    return array
-        .filter((item): item is T => {
-            if (item) {
-                return true;
-            } else {
-                return false;
-            }
-        })
+    return array.filter((item): item is T => {
+        if (item) {
+            return true;
+        } else {
+            return false;
+        }
+    })
 }
 
 export const filter = <T>(predicate: (value: T, index: number, array: T[]) => unknown) => {
