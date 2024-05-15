@@ -1,5 +1,13 @@
 import { pipe } from "./pipe.js";
 
+export function skip<T>(n: number) {
+    return function (self: T[]) {
+        return self.slice(n)
+    }
+}
+
+
+
 export function chunk<T>(size: number) {
     return function (self: T[]) {
         const result: T[][] = [];
