@@ -1,9 +1,24 @@
-import { compact, filter, find, flatten, join, map, shuffle, sort, take, uniq } from '$lib/array.js';
+import { chunk, compact, filter, find, flatten, join, map, shuffle, skip, sort, take, uniq } from '$lib/array.js';
 import { pipe } from '$lib/pipe.js';
 import { describe, expect, it } from 'vitest';
 
 
 describe('Array Module', () => {
+    it("skip", () => {
+        const orig = [1, 2, 3, 4, 5];
+        const res = pipe(orig, skip(2));
+        expect(res).toStrictEqual([3, 4, 5]);
+        expect(orig).toStrictEqual([1, 2, 3, 4, 5]);// orig not changed
+    });
+
+    it("chunk", () => {
+        const orig = [1, 2, 3, 4, 5];
+        const res = pipe(orig, chunk(2));
+        expect(res).toStrictEqual([[1, 2], [3, 4], [5]]);
+        expect(orig).toStrictEqual([1, 2, 3, 4, 5]);// orig not changed
+    });
+
+
     it("flatten", () => {
         const orig = [[1, 2], [3, 4]];
         const res = pipe(orig, flatten);

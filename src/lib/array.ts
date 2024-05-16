@@ -1,5 +1,24 @@
 import { pipe } from "./pipe.js";
 
+export function skip<T>(n: number) {
+    return function (self: T[]) {
+        return self.slice(n)
+    }
+}
+
+
+
+export function chunk<T>(size: number) {
+    return function (self: T[]) {
+        const result: T[][] = [];
+        for (let i = 0; i < self.length; i += size) {
+            result.push(self.slice(i, i + size));
+        }
+        return result;
+    }
+}
+
+
 export function flatten<T>(nestedArray: T[][]) {
     return nestedArray.flat(2) as T[];
 }
