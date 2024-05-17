@@ -1,9 +1,49 @@
-import { chunk, compact, filter, find, flatten, join, map, shuffle, skip, sort, take, uniq } from '$lib/array.js';
+import { chunk, compact, filter, find, flatten, groupBy, join, map, shuffle, skip, sort, take, uniq } from '$lib/array.js';
 import { pipe } from '$lib/pipe.js';
 import { describe, expect, it } from 'vitest';
 
 
 describe('Array Module', () => {
+    it("groupBy", () => {
+        const orig = [
+            { id: 1, name: "hoge" },
+            { id: 1, name: "fuga" },
+            { id: 2, name: "piyo" }
+        ]
+        const res = pipe(orig, groupBy(x => x.id));
+        expect(res).toStrictEqual(new Map([
+            [1, [{ id: 1, name: "hoge" }, { id: 1, name: "fuga" }]],
+            [2, [{ id: 2, name: "piyo" }]]
+        ]));
+        expect(orig).toStrictEqual([
+            { id: 1, name: "hoge" },
+            { id: 1, name: "fuga" },
+            { id: 2, name: "piyo" }
+        ]);// orig not changed
+    });
+
+    it("groupByDate", () => {
+        const orig = [
+            { name: "hoge", date: new Date("2021-01-01T00:00:00Z") },
+            { name: "fuga", date: new Date("2021-01-01T12:30:00Z") },
+            { name: "piyo", date: new Date("2021-01-02T05:00:00Z") },
+            { name: "puyo", date: new Date("2021-01-02T19:00:00Z") },
+        ]
+        const res = pipe(orig, groupBy(x => {
+            return x.date.toISOString().substring(0, 10);
+        }))
+        expect(res).toStrictEqual(new Map([
+            ["2021-01-01", [
+                { name: "hoge", date: new Date("2021-01-01T00:00:00Z") },
+                { name: "fuga", date: new Date("2021-01-01T12:30:00Z") },
+            ]],
+            ["2021-01-02", [
+                { name: "piyo", date: new Date("2021-01-02T05:00:00Z") },
+                { name: "puyo", date: new Date("2021-01-02T19:00:00Z") },
+            ]]
+        ]));
+    });
+
     it("skip", () => {
         const orig = [1, 2, 3, 4, 5];
         const res = pipe(orig, skip(2));

@@ -1,5 +1,20 @@
 import { pipe } from "./pipe.js";
 
+
+export function groupBy<T, K>(keyFn: (item: T) => K) {
+    return function (self: T[]) {
+        return self.reduce((groups, item) => {
+            const key = keyFn(item);
+            if (!groups.has(key)) {
+                groups.set(key, []);
+            }
+            groups.get(key)?.push(item);
+            return groups;
+        }, new Map<K, T[]>());
+    }
+}
+
+
 export function skip<T>(n: number) {
     return function (self: T[]) {
         return self.slice(n)
