@@ -73,7 +73,7 @@ export const filter = <T>(predicate: (value: T, index: number, array: T[]) => un
     }
 }
 
-export const map = <T, U>(transform: (element: T) => U): ((array: T[]) => U[]) => {
+export const map = <T, U>(transform: (value: T, index: number, array: T[]) => U): ((array: T[]) => U[]) => {
     return function (array: T[]) {
         return array.map(transform);
     }

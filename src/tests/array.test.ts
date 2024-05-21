@@ -145,6 +145,33 @@ describe('Array Module', () => {
         expect(result).toStrictEqual([{ brand: "Apple", storage: 128 }, { brand: "Apple", storage: 256 }]);
     })
 
+    it("map with index", () => {
+        type Phone = {
+            brand: string;
+            storage: number;
+        }
+        const orig: Phone[] = [
+            { brand: "Apple", storage: 128 },
+            { brand: "Samsung", storage: 256 },
+        ];
+        const result = pipe(orig,
+            map<Phone, Phone>((x, i) => {
+                if (i == 0) {
+                    return {
+                        ...x,
+                        storage: 1024,
+                    }
+                } else {
+                    return x;
+                }
+            })
+        );
+        expect(result).toStrictEqual([
+            { brand: "Apple", storage: 1024 },
+            { brand: "Samsung", storage: 256 },
+        ]);
+    })
+
     it("uniq()", () => {
         const orig = [{ id: 1, name: "hoge" }, { id: 1, name: "fuga" }, { id: 2, name: "piyo" }]
         const result = pipe(orig, uniq(x => x.id));
